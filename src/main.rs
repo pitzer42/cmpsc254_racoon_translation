@@ -19,11 +19,6 @@ const NMI: u16 = 0xfffa;
 const IRQ: u16 = 0xfffe;
 
 
-
-fn by_ref(x: &mut i32){
-    *x += 1
-}
-
 fn main() {
     let mut test = Mpu6502::new();
 }
