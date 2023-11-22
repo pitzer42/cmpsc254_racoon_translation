@@ -90,8 +90,16 @@ impl Mpu6502 {
         let wrapped_addr = (addr & self.addrHighMask) + ((addr+1) & self.byteMask);
         self.ByteAt(addr) + (self.ByteAt(wrapped_addr) << BYTE_WIDTH) 
     }
+    
     pub fn ProgramCounter(&mut self) -> i32{
         self.pc
+    }
+    
+    pub fn ImmediateByte(&mut self) -> i32{
+        0
+    }
+    
+    pub fn FlagsNZ(&mut self, foo: i32 ){
     }
 
     pub fn reset(&mut self){
@@ -124,62 +132,61 @@ impl Mpu6502 {
     
     pub fn opROL(&mut self, x: i32) {
         let mut tbyte = self.acc;
-        let mut addr:u8 = 0;
+        let mut addr:i32 = 0;
         
         if x != -1{
             //addr = x(); not sure what is the rust equivalent to this line
-            tbyte = self.ByteAt(addr)
+            tbyte = self.ByteAt(addr);
         }
-        if ((self.p != 0) & (CARRY != 0)) {
-            if ((tbyte != 0) & (NEGATIVE != 0)) {
+        if (self.p != 0) & (CARRY != 0) {
+            if (tbyte != 0) & (NEGATIVE != 0) {
                 /*pass*/
             } else {
                 self.p = self.p | CARRY;
             }
-            tbyte = ((tbyte << 1) | 1);
+            tbyte = (tbyte << 1) | 1;
         } else {
-            if ((tbyte != 0) & (NEGATIVE != 0)) {
+            if (tbyte != 0) & (NEGATIVE != 0) {
                 self.p |= CARRY;
             }
-            tbyte = (tbyte << 1);
+            tbyte = tbyte << 1;
         }
         tbyte &= self.byteMask;
         self.FlagsNZ(tbyte);
         if x == -1 {
             self.acc = tbyte;
         } else {
-            self.memory[addr as usize] = tbyte;
+            self.memory[addr as usize] = tbyte as i8;
         }
     }
     
-    pub fn AbsoluteYAddr(&mut self){
-        if(self.addcycles)
-        {
-            let mut a1 = self.WordAt(self.pc)
-            let mut a2 = (a1 + self.y) & self.addrMask
+    pub fn AbsoluteYAddr(&mut self) -> i32{
+        if self.addcycles {
+            let a1 = self.WordAt(self.pc);
+            let a2 = (a1 + self.y) & self.addrMask;
             if(a1 & self.addrHighMask) != (a2 & self.addrHighMask){
-                self.excycles += 1
+                self.excycles += 1;
             }
-            return a2
+            return a2;
         }
-        return (self.WordAt(self.pc) + self.y) & self.addrMask
+        return (self.WordAt(self.pc) + self.y) & self.addrMask;
     }
     
     pub fn BranchRelAddr(&mut self){
-    	self.excycles += 1
-    	let mut addr = self.ImmediateByte() // To implement ImmediateByte
-    	self.pc += 1
+    	self.excycles += 1;
+    	let mut addr = self.ImmediateByte();
+    	self.pc += 1;
     	
-    	if (addr & NEGATIVE){
-    	    addr = self.pc - (addr ^ self.byteMask) -1
+    	if (addr & (NEGATIVE as i32)) == 0{
+    	    addr = self.pc + addr;
     	} else {
-    	    addr = self.pc + addr
+    	    addr = self.pc - (addr ^ self.byteMask) -1;
     	}
     	
     	if(self.pc & self.addrHighMask) != (addr & self.addrHighMask){
-    	    self.excycles += 1
+    	    self.excycles += 1;
     	}
     	
-    	self.pc = addr & self.addrMask
+    	self.pc = addr & self.addrMask;
     }
 }
