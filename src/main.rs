@@ -151,4 +151,16 @@ impl Mpu6502 {
             self.memory[addr as usize] = tbyte;
         }
     }
+    
+    pub fn AbsoluteYAddr(&mut self){
+        if(self.addcycles)
+        {
+            let mut a1 = self.WordAt(self.pc)
+            let mut a2 = (a1 + self.y) & self.addrMask
+            if(a1 & self.addrHighMask) != (a2 & self.addrHighMask):
+                self.excycles += 1
+            return a2
+        }
+        return (self.WordAt(self.pc) + self.y) & self.addrMask
+    }    
 }
