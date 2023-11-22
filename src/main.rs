@@ -99,7 +99,13 @@ impl Mpu6502 {
         return self.ByteAt(self.pc)
     }
     
-    pub fn FlagsNZ(&mut self, foo: i32 ){
+    pub fn FlagsNZ(&mut self, value: i32){
+        self.p &= !(ZERO | NEGATIVE);
+        if value == 0{
+            self.p = self.p | ZERO;
+        } else {
+            self.p = self.p | (value & NEGATIVE as i32) as u8;
+    	}
     }
 
     pub fn reset(&mut self){
