@@ -130,16 +130,16 @@ impl Mpu6502 {
             //addr = x(); not sure what is the rust equivalent to this line
             tbyte = self.ByteAt(addr)
         }
-        if ((self.p != 0) & (self.CARRY != 0)) {
-            if ((tbyte != 0) & (self.NEGATIVE != 0)) {
+        if ((self.p != 0) & (CARRY != 0)) {
+            if ((tbyte != 0) & (NEGATIVE != 0)) {
                 /*pass*/
             } else {
-                self.p = self.p | self.CARRY;
+                self.p = self.p | CARRY;
             }
             tbyte = ((tbyte << 1) | 1);
         } else {
-            if ((tbyte != 0) & (self.NEGATIVE != 0)) {
-                self.p |= self.CARRY;
+            if ((tbyte != 0) & (NEGATIVE != 0)) {
+                self.p |= CARRY;
             }
             tbyte = (tbyte << 1);
         }
@@ -157,10 +157,29 @@ impl Mpu6502 {
         {
             let mut a1 = self.WordAt(self.pc)
             let mut a2 = (a1 + self.y) & self.addrMask
-            if(a1 & self.addrHighMask) != (a2 & self.addrHighMask):
+            if(a1 & self.addrHighMask) != (a2 & self.addrHighMask){
                 self.excycles += 1
+            }
             return a2
         }
         return (self.WordAt(self.pc) + self.y) & self.addrMask
-    }    
+    }
+    
+    pub fn BranchRelAddr(&mut self){
+    	self.excycles += 1
+    	let mut addr = self.ImmediateByte() // To implement ImmediateByte
+    	self.pc += 1
+    	
+    	if (addr & NEGATIVE){
+    	    addr = self.pc - (addr ^ self.byteMask) -1
+    	} else {
+    	    addr = self.pc + addr
+    	}
+    	
+    	if(self.pc & self.addrHighMask) != (addr & self.addrHighMask){
+    	    self.excycles += 1
+    	}
+    	
+    	self.pc = addr & self.addrMask
+    }
 }
