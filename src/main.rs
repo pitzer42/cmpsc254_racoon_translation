@@ -96,7 +96,7 @@ impl Mpu6502 {
     }
     
     pub fn ImmediateByte(&mut self) -> i32{
-        0
+        return self.ByteAt(self.pc)
     }
     
     pub fn FlagsNZ(&mut self, foo: i32 ){
