@@ -103,6 +103,7 @@ impl Mpu6502 {
         self.p = BREAK | UNUSED;
         self.processorCycles = 0;
     }
+    
     pub fn opAsl(&mut self){
         let mut tbyte = self.acc;
         self.p &= !(CARRY | NEGATIVE | ZERO);
@@ -119,5 +120,35 @@ impl Mpu6502 {
         println!("{:#b}", NEGATIVE);
         println!("{:#b}", self.p);
 
+    }
+    
+    pub fn opROL(&mut self, x: i32) {
+        let mut tbyte = self.acc;
+        let mut addr:u8 = 0;
+        
+        if x != -1{
+            //addr = x(); not sure what is the rust equivalent to this line
+            tbyte = self.ByteAt(addr)
+        }
+        if ((self.p != 0) & (self.CARRY != 0)) {
+            if ((tbyte != 0) & (self.NEGATIVE != 0)) {
+                /*pass*/
+            } else {
+                self.p = self.p | self.CARRY;
+            }
+            tbyte = ((tbyte << 1) | 1);
+        } else {
+            if ((tbyte != 0) & (self.NEGATIVE != 0)) {
+                self.p |= self.CARRY;
+            }
+            tbyte = (tbyte << 1);
+        }
+        tbyte &= self.byteMask;
+        self.FlagsNZ(tbyte);
+        if x == -1 {
+            self.acc = tbyte;
+        } else {
+            self.memory[addr as usize] = tbyte;
+        }
     }
 }
