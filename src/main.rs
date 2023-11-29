@@ -144,15 +144,15 @@ impl Mpu6502 {
             addr = x.unwrap();
             tbyte = self.ByteAt(addr);
         }
-        if (self.p != 0) & (CARRY != 0) {
-            if (tbyte != 0) & (NEGATIVE != 0) {
+        if (self.p & CARRY) != 0 {
+            if (tbyte & (NEGATIVE as i32)) != 0 {
                 /*pass*/
             } else {
                 self.p = self.p | CARRY;
             }
             tbyte = (tbyte << 1) | 1;
         } else {
-            if (tbyte != 0) & (NEGATIVE != 0) {
+            if (tbyte & (NEGATIVE as i32)) != 0 {
                 self.p |= CARRY;
             }
             tbyte = tbyte << 1;
