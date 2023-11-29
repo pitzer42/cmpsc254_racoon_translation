@@ -111,7 +111,7 @@ impl Mpu6502 {
     pub fn reset(&mut self){
         self.pc = self.start_pc;
         self.sp = self.byteMask;
-        self.acc =0;
+        self.acc = 0;
         self.x = 0;
         self.y = 0;
         self.p = BREAK | UNUSED;
@@ -195,4 +195,100 @@ impl Mpu6502 {
     	
     	self.pc = addr & self.addrMask;
     }
+    
+    //__________________________________________________________________________________operations
+    
+
+    pub fn opORA(&mut self, x: i32){
+        self.acc = self.acc | self.ByteAt(x);
+        self.FlagsNZ(self.acc);
+    }
+
+    pub fn opAND(&mut self, x: i32){
+        self.acc = self.acc & self.ByteAt(x);
+        self.FlagsNZ(self.acc);
+    }
+
+    pub fn opEOR(&mut self, x: i32){
+        self.acc = self.acc ^ self.ByteAt(x);
+        self.FlagsNZ(self.acc);
+    }
+    
+    pub fn opBCL(&mut self, x: i32){
+        if ((self.p as i32) & x) != 0{
+            self.pc += 1;
+        }else{
+	        self.BranchRelAddr();
+        }
+    }
+
+    pub fn opBST(&mut self, x: i32){
+        if ((self.p as i32) & x) != 0{
+            self.BranchRelAddr();
+        }else{
+            self.pc += 1;
+        }
+    }
+    
+    pub fn opCLR(&mut self, x: i32){
+        self.p = self.p & !(x as u8);
+    }
+
+    pub fn opSET(&mut self, x: i32){
+        self.p = self.p | !(x as u8);
+    }
+    
+    pub fn opSTA(&mut self, x: i32){
+        self.memory[x as usize] = self.acc as i8;
+    }
+
+    pub fn opSTY(&mut self, x: i32){
+        self.memory[x as usize] = self.y as i8;
+    }
+
+    pub fn opBIT(&mut self, x: i32){
+        let tbyte = self.ByteAt(x);
+        self. p = self.p & !(ZERO | NEGATIVE | OVERFLOW);
+        if (self.acc & tbyte) == 0{
+            self. p = self.p | ZERO;
+        }
+        self.p = self.p | ((tbyte & ((NEGATIVE | OVERFLOW) as i32)) as u8);
+    }
+
+
+    pub fn opCMPR(&mut self, addr: i32, register_value : i32){
+        let tbyte = self.ByteAt(addr);
+        self. p = self.p & !(CARRY | ZERO | NEGATIVE);
+        if register_value == tbyte{
+            self. p = self.p | CARRY | ZERO;
+        }else if register_value > tbyte{
+            self. p = self.p | CARRY;
+        }
+        self.p = self.p | (((register_value - tbyte) & NEGATIVE as i32) as u8);
+    }
+
+    pub fn opLSR(&mut self, x: Option<i32>){
+        let mut tbyte: i32;
+        let mut addr: i32 = 0;
+        if x.is_none(){
+            tbyte = self.acc;
+        } else{
+            addr = x.unwrap();
+            tbyte = self.ByteAt(addr);
+        }
+        
+        self.p = self.p & !(CARRY | NEGATIVE | ZERO);
+        self.p = self.p | ((tbyte & 1) as u8);
+        
+        tbyte = tbyte >> 1;
+        if tbyte == 0{
+            self.p = self.p | ZERO;        
+        }
+        
+        if x.is_none(){
+            self.acc = tbyte;
+        }else{
+            self.memory[addr as usize] = tbyte as i8;
+        }
+    }      
 }
