@@ -21,6 +21,8 @@ const IRQ: u16 = 0xfffe;
 
 fn main() {
     let mut test = Mpu6502::new();
+    test.ImmediateByte();
+    print!("HI")
 }
 
 pub struct Mpu6502 {
@@ -90,27 +92,43 @@ impl Mpu6502 {
         let wrapped_addr = (addr & self.addrHighMask) + ((addr+1) & self.byteMask);
         self.ByteAt(addr) + (self.ByteAt(wrapped_addr) << BYTE_WIDTH) 
     }
+    
     pub fn ProgramCounter(&mut self) -> i32{
         self.pc
+    }
+    
+    pub fn ImmediateByte(&mut self) -> i32{
+        return self.ByteAt(self.pc)
+    }
+    
+    pub fn FlagsNZ(&mut self, value: i32){
+        self.p &= !(ZERO | NEGATIVE);
+        if value == 0{
+            self.p = self.p | ZERO;
+        } else {
+            self.p = self.p | (value & NEGATIVE as i32) as u8;
+    	}
     }
 
     pub fn reset(&mut self){
         self.pc = self.start_pc;
         self.sp = self.byteMask;
-        self.acc =0;
+        self.acc = 0;
         self.x = 0;
         self.y = 0;
         self.p = BREAK | UNUSED;
         self.processorCycles = 0;
     }
+    
     pub fn opAsl(&mut self){
         let mut tbyte = self.acc;
         self.p &= !(CARRY | NEGATIVE | ZERO);
-        if ((tbyte as u8 & NEGATIVE) != 0){
+
+        if tbyte as u8 & NEGATIVE != 0 {
             self.p |= CARRY
         }
         tbyte = (tbyte << 1) & self.byteMask;
-        if (tbyte != 0){
+        if tbyte != 0 {
             self.p |= NEGATIVE & tbyte as u8;
         } else {
             self.p |= ZERO;
@@ -120,4 +138,423 @@ impl Mpu6502 {
         println!("{:#b}", self.p);
 
     }
+    
+    pub fn opROL(&mut self, x: Option<i32>) {
+        let mut tbyte = self.acc;
+        let mut addr:i32 = 0;
+        
+        if !x.is_none(){
+            addr = x.unwrap();
+            tbyte = self.ByteAt(addr);
+        }
+        if (self.p & CARRY) != 0 {
+            if (tbyte & (NEGATIVE as i32)) != 0 {
+                /*pass*/
+            } else {
+                self.p = self.p | CARRY;
+            }
+            tbyte = (tbyte << 1) | 1;
+        } else {
+            if (tbyte & (NEGATIVE as i32)) != 0 {
+                self.p |= CARRY;
+            }
+            tbyte = tbyte << 1;
+        }
+        tbyte &= self.byteMask;
+        self.FlagsNZ(tbyte);
+        if x.is_none() {
+            self.acc = tbyte;
+        } else {
+            self.memory[addr as usize] = tbyte as i8;
+        }
+    }
+    
+    pub fn AbsoluteYAddr(&mut self) -> i32{
+        if self.addcycles {
+            let a1 = self.WordAt(self.pc);
+            let a2 = (a1 + self.y) & self.addrMask;
+            if(a1 & self.addrHighMask) != (a2 & self.addrHighMask){
+                self.excycles += 1;
+            }
+            return a2;
+        }
+        return (self.WordAt(self.pc) + self.y) & self.addrMask;
+    }
+    
+    pub fn BranchRelAddr(&mut self){
+    	self.excycles += 1;
+    	let mut addr = self.ImmediateByte();
+    	self.pc += 1;
+    	
+    	if (addr & (NEGATIVE as i32)) == 0{
+    	    addr = self.pc + addr;
+    	} else {
+    	    addr = self.pc - (addr ^ self.byteMask) -1;
+    	}
+    	
+    	if(self.pc & self.addrHighMask) != (addr & self.addrHighMask){
+    	    self.excycles += 1;
+    	}
+    	
+    	self.pc = addr & self.addrMask;
+    }
+    
+    //__________________________________________________________________________________operations
+    
+
+    pub fn opORA(&mut self, x: i32){
+        self.acc = self.acc | self.ByteAt(x);
+        self.FlagsNZ(self.acc);
+    }
+
+    pub fn opAND(&mut self, x: i32){
+        self.acc = self.acc & self.ByteAt(x);
+        self.FlagsNZ(self.acc);
+    }
+
+    pub fn opEOR(&mut self, x: i32){
+        self.acc = self.acc ^ self.ByteAt(x);
+        self.FlagsNZ(self.acc);
+    }
+    
+    pub fn opBCL(&mut self, x: i32){
+        if ((self.p as i32) & x) != 0{
+            self.pc += 1;
+        }else{
+	        self.BranchRelAddr();
+        }
+    }
+
+    pub fn opBST(&mut self, x: i32){
+        if ((self.p as i32) & x) != 0{
+            self.BranchRelAddr();
+        }else{
+            self.pc += 1;
+        }
+    }
+    
+    pub fn opCLR(&mut self, x: i32){
+        self.p = self.p & !(x as u8);
+    }
+
+    pub fn opSET(&mut self, x: i32){
+        self.p = self.p | (x as u8);
+    }
+    
+    pub fn opSTA(&mut self, x: i32){
+        self.memory[x as usize] = self.acc as i8;
+    }
+
+    pub fn opSTY(&mut self, x: i32){
+        self.memory[x as usize] = self.y as i8;
+    }
+
+    pub fn opBIT(&mut self, x: i32){
+        let tbyte = self.ByteAt(x);
+        self. p = self.p & !(ZERO | NEGATIVE | OVERFLOW);
+        if (self.acc & tbyte) == 0{
+            self. p = self.p | ZERO;
+        }
+        self.p = self.p | ((tbyte & ((NEGATIVE | OVERFLOW) as i32)) as u8);
+    }
+
+
+    pub fn opCMPR(&mut self, addr: i32, register_value : i32){
+        let tbyte = self.ByteAt(addr);
+        self. p = self.p & !(CARRY | ZERO | NEGATIVE);
+        if register_value == tbyte{
+            self. p = self.p | CARRY | ZERO;
+        }else if register_value > tbyte{
+            self. p = self.p | CARRY;
+        }
+        self.p = self.p | (((register_value - tbyte) & NEGATIVE as i32) as u8);
+    }
+
+    pub fn opLSR(&mut self, x: Option<i32>){
+        let mut tbyte: i32;
+        let mut addr: i32 = 0;
+        if x.is_none(){
+            tbyte = self.acc;
+        } else{
+            addr = x.unwrap();
+            tbyte = self.ByteAt(addr);
+        }
+        
+        self.p = self.p & !(CARRY | NEGATIVE | ZERO);
+        self.p = self.p | ((tbyte & 1) as u8);
+        
+        tbyte = tbyte >> 1;
+        if tbyte == 0{
+            self.p = self.p | ZERO;        
+        }
+        
+        if x.is_none(){
+            self.acc = tbyte;
+        }else{
+            self.memory[addr as usize] = tbyte as i8;
+        }
+    }      
+
+
+
+    pub fn ImmediateByte(&mut self) -> i32{
+        self.ByteAt(self.pc)
+    }
+
+    pub fn ZeroPageAddr(&mut self) -> i32 {
+        self.ByteAt(self.pc)
+    }
+    pub fn ZeroPageXAddr(&mut self) -> i32 {
+        self.byteMask & (self.x + self.ByteAt(self.pc))
+    }
+
+    pub fn ZeroPageYAddr(&mut self) -> i32 {
+        self.byteMask & (self.y + self.ByteAt(self.pc))
+    }
+
+    pub fn IndirectXAddr(&mut self) -> i32 {
+        let byte_at = self.ByteAt(self.pc);
+        self.WrapAt(self.byteMask & (byte_at + self.x))
+
+    }
+
+    pub fn IndirectYAddr(&mut self) -> i32 {
+        let byte_at: i32 = self.ByteAt(self.pc);
+        if self.addcycles {
+            let a1 = self.WrapAt(byte_at);
+            let a2 = (a1 + self.y) & self.addrMask;
+            if (a1 & self.addrHighMask) != (a2 & self.addrHighMask) {
+                self.excycles += 1
+            }
+            return a2
+        }
+        else {
+            (self.WrapAt(byte_at) + self.y) & self.addrMask
+        }
+    }
+        
+
+    pub fn AbsoluteAddr(&mut self) -> i32{
+        self.WordAt(self.pc)
+    }
+
+    pub fn AbsoluteXAddr(&mut self) -> i32 {
+        if self.addcycles {
+            let a1 = self.WordAt(self.pc);
+            let a2 = (a1 + self.x) & self.addrMask;
+            if a1 & self.addrHighMask != a2 & self.addrHighMask {
+                self.excycles += 1
+            }
+            return a2
+        }
+       
+        else {
+            return (self.WordAt(self.pc) + self.x) & self.addrMask
+
+        }
+    }
+    // NEW OPS 11/30
+    //TEMP FLAGSNZ
+    pub fn FlagsNZ(&mut self, value: i32){
+        self.p &= !(ZERO | NEGATIVE);
+        if value == 0{
+            self.p = self.p | ZERO;
+        } else {
+            self.p = self.p | (value & NEGATIVE as i32) as u8;
+    	}
+    }
+    pub fn opSTX(&mut self, y: i32) {
+        self.memory[y as usize] = self.x as i8;
+    }
+
+    pub fn opLDA(&mut self, x: i32) {
+        self.acc = self.ByteAt(x);
+        self.FlagsNZ(self.acc);
+    }
+    pub fn opLDY(&mut self, x: i32) {
+        self.y = self.ByteAt(x);
+        self.FlagsNZ(self.y);
+    }
+    pub fn opLDX(&mut self, y: i32) {
+        self.x = self.ByteAt(y);
+        self.FlagsNZ(self.x);
+    }
+    pub fn opDecr(&mut self, x: Option<i32>) {
+        let mut tbyte: i32;
+        let mut addr: i32 = 0; // Needs to be initialized so setting addr to 0
+        if x.is_none() {
+            tbyte = self.acc;
+        } else {
+            addr = x.unwrap();
+            tbyte = self.ByteAt(addr);
+        }
+        self.p &= !(ZERO | NEGATIVE);
+        tbyte = (tbyte - 1) & self.byteMask;
+        if tbyte != 0 {
+            self.p |= tbyte as u8 & NEGATIVE;
+        } else {
+            self.p |= ZERO;
+        }
+
+        if x.is_none() {
+            self.acc = tbyte;
+        } else {
+            self.memory[addr as usize] = tbyte as i8;
+        }
+
+    }
+    pub fn opIncr(&mut self, x: Option<i32>) {
+        let mut tbyte: i32;
+        let mut addr: i32 = 0; // Needs to be initialized so setting addr to 0
+        if x.is_none() {
+            tbyte = self.acc;
+        } else {
+            addr = x.unwrap();
+            tbyte = self.ByteAt(addr);
+        }
+        self.p &= !(ZERO | NEGATIVE);
+        tbyte = (tbyte + 1) & self.byteMask;
+        if tbyte != 0 {
+            self.p |= tbyte as u8 & NEGATIVE;
+        } else {
+            self.p |= ZERO;
+        }
+        if x.is_none() {
+            self.acc = tbyte;
+        } else {
+            self.memory[addr as usize] = tbyte as i8;
+        }
+    }
+    pub fn opADC(&mut self, x: i32) {
+        let mut data = self.ByteAt(x);
+
+        if (self.p & DECIMAL) != 0  {
+            let mut halfcarry = 0;
+            let mut decimalcarry = 0;
+            let mut adjust0 = 0;
+            let mut adjust1 = 0;
+            let mut nibble0 = (data & 0xf) + (self.acc & 0xf) + (self.p as i32 & CARRY as i32);
+            if nibble0 > 9 {
+                adjust0 = 6;
+                halfcarry = 1;
+            }
+            let mut nibble1 = ((data >> 4) & 0xf) + ((self.acc >> 4) & 0xf) + halfcarry;
+            if nibble1 > 9 {
+                adjust1 = 6;
+                decimalcarry = 1;
+            }
+            //the ALU outputs are not decimally adjusted
+            nibble0 = nibble0 & 0xf;
+            nibble1 = nibble1 & 0xf;
+            let aluresult = (nibble1 << 4) + nibble0;
+
+            // the final A contents will be decimally adjusted
+            nibble0 = (nibble0 + adjust0) & 0xf;
+            nibble1 = (nibble1 + adjust1) & 0xf;
+
+            self.p &= !(CARRY | OVERFLOW | NEGATIVE | ZERO);
+
+            if aluresult == 0 {
+                self.p |= ZERO;
+            }
+            else {
+                self.p |= aluresult as u8 & NEGATIVE;
+            }
+            if decimalcarry == 1 {
+                self.p |= CARRY;
+            }
+            if ((!(self.acc ^ data) & (self.acc ^ aluresult)) & NEGATIVE as i32) != 0 {
+                self.p |= OVERFLOW;
+            }
+            self.acc = (nibble1 << 4) + nibble0;
+        }
+        else {
+            let mut tmp: i32 = 0;
+            if (self.p & CARRY) != 0 {
+                tmp = 1;
+            }
+            else {
+                tmp = 0;
+            }
+            let result = data + self.acc + tmp;
+            self.p &= !(CARRY | OVERFLOW | NEGATIVE | ZERO);
+            if (!(self.acc ^ data) & (self.acc ^ result)) & NEGATIVE as i32 != 0 {
+                self.p |= OVERFLOW;
+            }
+            data = result;
+
+            if data > self.byteMask {
+                self.p |= CARRY;
+                data &= self.byteMask;
+            }
+            if data == 0 {
+                self.p |= ZERO;
+            }
+            else {
+                self.p |= data as u8 & NEGATIVE;
+
+            }
+            self.acc = data;
+        }
+    }
+    pub fn opSBC(&mut self, x:i32) {
+        let data = self.ByteAt(x);
+
+        if self.p & DECIMAL != 0 {
+            let mut halfcarry = 1;
+            let mut decimalcarry = 0;
+            let mut adjust0 = 0;
+            let mut adjust1 = 0;
+
+            let mut nibble0 = (self.acc & 0xf) + (!data & 0xf) + (self.p as i32 & CARRY as i32);
+            if nibble0 <= 0xf {
+                halfcarry = 0;
+                adjust0 = 10;
+            }
+            let mut nibble1 = ((self.acc >> 4) & 0xf) + ((!data >> 4) & 0xf) + halfcarry;
+            if nibble1 <= 0xf {
+                adjust1 = 10 << 4;
+            }
+            let mut aluresult = self.acc + (!data & self.byteMask) + (self.p as i32 + CARRY as i32);
+            if aluresult > self.byteMask {
+                decimalcarry = 1;
+            }
+            aluresult &= self.byteMask;
+            nibble0 = (aluresult + adjust0) & 0xf;
+            nibble1 = ((aluresult + adjust1) >> 4) & 0xf;
+
+            self.p &= !(CARRY | ZERO | NEGATIVE | OVERFLOW);
+            if aluresult == 0 {
+                self.p |= ZERO;
+            } else {
+                self.p |= aluresult as u8 & NEGATIVE;
+            }
+            if decimalcarry == 1 {
+                self.p |= CARRY;
+            }
+            if ((self.acc ^ data) & (self.acc ^ aluresult)) & NEGATIVE as i32 != 0 {
+                self.p |= OVERFLOW;
+            }
+            self.acc = (nibble1 << 4) + nibble0;
+        } else {
+            let result = self.acc + (!data & self.byteMask) + (self.p as i32 & CARRY as i32);
+            self.p &= !(CARRY | ZERO | OVERFLOW | NEGATIVE);
+
+            if((self.acc ^ data) & (self.acc ^ result) & NEGATIVE as i32) != 0 {
+                self.p |= OVERFLOW;
+            }
+            let data = result & self.byteMask;
+            if data == 0 {
+                self.p |= ZERO;
+            }
+            if result > self.byteMask {
+                self.p |= CARRY;
+            }
+            self.p |= data as u8 & NEGATIVE;
+            self.acc = data;
+
+        }
+    }
+
+
 }
