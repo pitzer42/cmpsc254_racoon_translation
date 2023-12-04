@@ -21,6 +21,8 @@ const IRQ: u16 = 0xfffe;
 
 fn main() {
     let mut test = Mpu6502::new();
+    test.ImmediateByte();
+    print!("HI")
 }
 
 pub struct Mpu6502 {
@@ -121,11 +123,12 @@ impl Mpu6502 {
     pub fn opAsl(&mut self){
         let mut tbyte = self.acc;
         self.p &= !(CARRY | NEGATIVE | ZERO);
-        if (tbyte as u8 & NEGATIVE) != 0{
+
+        if tbyte as u8 & NEGATIVE != 0 {
             self.p |= CARRY
         }
         tbyte = (tbyte << 1) & self.byteMask;
-        if tbyte != 0{
+        if tbyte != 0 {
             self.p |= NEGATIVE & tbyte as u8;
         } else {
             self.p |= ZERO;
@@ -291,4 +294,65 @@ impl Mpu6502 {
             self.memory[addr as usize] = tbyte as i8;
         }
     }      
+
+
+
+    pub fn ImmediateByte(&mut self) -> i32{
+        self.ByteAt(self.pc)
+    }
+
+    pub fn ZeroPageAddr(&mut self) -> i32 {
+        self.ByteAt(self.pc)
+    }
+    pub fn ZeroPageXAddr(&mut self) -> i32 {
+        self.byteMask & (self.x + self.ByteAt(self.pc))
+    }
+
+    pub fn ZeroPageYAddr(&mut self) -> i32 {
+        self.byteMask & (self.y + self.ByteAt(self.pc))
+    }
+
+    pub fn IndirectXAddr(&mut self) -> i32 {
+        let byte_at = self.ByteAt(self.pc);
+        self.WrapAt(self.byteMask & (byte_at + self.x))
+
+    }
+
+    pub fn IndirectYAddr(&mut self) -> i32 {
+        let byte_at: i32 = self.ByteAt(self.pc);
+        if self.addcycles {
+            let a1 = self.WrapAt(byte_at);
+            let a2 = (a1 + self.y) & self.addrMask;
+            if (a1 & self.addrHighMask) != (a2 & self.addrHighMask) {
+                self.excycles += 1
+            }
+            return a2
+        }
+        else {
+            (self.WrapAt(byte_at) + self.y) & self.addrMask
+        }
+    }
+        
+
+    pub fn AbsoluteAddr(&mut self) -> i32{
+        self.WordAt(self.pc)
+    }
+
+    pub fn AbsoluteXAddr(&mut self) -> i32 {
+        if self.addcycles {
+            let a1 = self.WordAt(self.pc);
+            let a2 = (a1 + self.x) & self.addrMask;
+            if a1 & self.addrHighMask != a2 & self.addrHighMask {
+                self.excycles += 1
+            }
+            return a2
+        }
+       
+        else {
+            return (self.WordAt(self.pc) + self.x) & self.addrMask
+
+        }
+    }
+
+
 }
