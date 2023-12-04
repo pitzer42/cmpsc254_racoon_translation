@@ -353,6 +353,208 @@ impl Mpu6502 {
 
         }
     }
+    // NEW OPS 11/30
+    //TEMP FLAGSNZ
+    pub fn FlagsNZ(&mut self, value: i32){
+        self.p &= !(ZERO | NEGATIVE);
+        if value == 0{
+            self.p = self.p | ZERO;
+        } else {
+            self.p = self.p | (value & NEGATIVE as i32) as u8;
+    	}
+    }
+    pub fn opSTX(&mut self, y: i32) {
+        self.memory[y as usize] = self.x as i8;
+    }
+
+    pub fn opLDA(&mut self, x: i32) {
+        self.acc = self.ByteAt(x);
+        self.FlagsNZ(self.acc);
+    }
+    pub fn opLDY(&mut self, x: i32) {
+        self.y = self.ByteAt(x);
+        self.FlagsNZ(self.y);
+    }
+    pub fn opLDX(&mut self, y: i32) {
+        self.x = self.ByteAt(y);
+        self.FlagsNZ(self.x);
+    }
+    pub fn opDecr(&mut self, x: Option<i32>) {
+        let mut tbyte: i32;
+        let mut addr: i32 = 0; // Needs to be initialized so setting addr to 0
+        if x.is_none() {
+            tbyte = self.acc;
+        } else {
+            addr = x.unwrap();
+            tbyte = self.ByteAt(addr);
+        }
+        self.p &= !(ZERO | NEGATIVE);
+        tbyte = (tbyte - 1) & self.byteMask;
+        if tbyte != 0 {
+            self.p |= tbyte as u8 & NEGATIVE;
+        } else {
+            self.p |= ZERO;
+        }
+
+        if x.is_none() {
+            self.acc = tbyte;
+        } else {
+            self.memory[addr as usize] = tbyte as i8;
+        }
+
+    }
+    pub fn opIncr(&mut self, x: Option<i32>) {
+        let mut tbyte: i32;
+        let mut addr: i32 = 0; // Needs to be initialized so setting addr to 0
+        if x.is_none() {
+            tbyte = self.acc;
+        } else {
+            addr = x.unwrap();
+            tbyte = self.ByteAt(addr);
+        }
+        self.p &= !(ZERO | NEGATIVE);
+        tbyte = (tbyte + 1) & self.byteMask;
+        if tbyte != 0 {
+            self.p |= tbyte as u8 & NEGATIVE;
+        } else {
+            self.p |= ZERO;
+        }
+        if x.is_none() {
+            self.acc = tbyte;
+        } else {
+            self.memory[addr as usize] = tbyte as i8;
+        }
+    }
+    pub fn opADC(&mut self, x: i32) {
+        let mut data = self.ByteAt(x);
+
+        if (self.p & DECIMAL) != 0  {
+            let mut halfcarry = 0;
+            let mut decimalcarry = 0;
+            let mut adjust0 = 0;
+            let mut adjust1 = 0;
+            let mut nibble0 = (data & 0xf) + (self.acc & 0xf) + (self.p as i32 & CARRY as i32);
+            if nibble0 > 9 {
+                adjust0 = 6;
+                halfcarry = 1;
+            }
+            let mut nibble1 = ((data >> 4) & 0xf) + ((self.acc >> 4) & 0xf) + halfcarry;
+            if nibble1 > 9 {
+                adjust1 = 6;
+                decimalcarry = 1;
+            }
+            //the ALU outputs are not decimally adjusted
+            nibble0 = nibble0 & 0xf;
+            nibble1 = nibble1 & 0xf;
+            let aluresult = (nibble1 << 4) + nibble0;
+
+            // the final A contents will be decimally adjusted
+            nibble0 = (nibble0 + adjust0) & 0xf;
+            nibble1 = (nibble1 + adjust1) & 0xf;
+
+            self.p &= !(CARRY | OVERFLOW | NEGATIVE | ZERO);
+
+            if aluresult == 0 {
+                self.p |= ZERO;
+            }
+            else {
+                self.p |= aluresult as u8 & NEGATIVE;
+            }
+            if decimalcarry == 1 {
+                self.p |= CARRY;
+            }
+            if ((!(self.acc ^ data) & (self.acc ^ aluresult)) & NEGATIVE as i32) != 0 {
+                self.p |= OVERFLOW;
+            }
+            self.acc = (nibble1 << 4) + nibble0;
+        }
+        else {
+            let mut tmp: i32 = 0;
+            if (self.p & CARRY) != 0 {
+                tmp = 1;
+            }
+            else {
+                tmp = 0;
+            }
+            let result = data + self.acc + tmp;
+            self.p &= !(CARRY | OVERFLOW | NEGATIVE | ZERO);
+            if (!(self.acc ^ data) & (self.acc ^ result)) & NEGATIVE as i32 != 0 {
+                self.p |= OVERFLOW;
+            }
+            data = result;
+
+            if data > self.byteMask {
+                self.p |= CARRY;
+                data &= self.byteMask;
+            }
+            if data == 0 {
+                self.p |= ZERO;
+            }
+            else {
+                self.p |= data as u8 & NEGATIVE;
+
+            }
+            self.acc = data;
+        }
+    }
+    pub fn opSBC(&mut self, x:i32) {
+        let data = self.ByteAt(x);
+
+        if self.p & DECIMAL != 0 {
+            let mut halfcarry = 1;
+            let mut decimalcarry = 0;
+            let mut adjust0 = 0;
+            let mut adjust1 = 0;
+
+            let mut nibble0 = (self.acc & 0xf) + (!data & 0xf) + (self.p as i32 & CARRY as i32);
+            if nibble0 <= 0xf {
+                halfcarry = 0;
+                adjust0 = 10;
+            }
+            let mut nibble1 = ((self.acc >> 4) & 0xf) + ((!data >> 4) & 0xf) + halfcarry;
+            if nibble1 <= 0xf {
+                adjust1 = 10 << 4;
+            }
+            let mut aluresult = self.acc + (!data & self.byteMask) + (self.p as i32 + CARRY as i32);
+            if aluresult > self.byteMask {
+                decimalcarry = 1;
+            }
+            aluresult &= self.byteMask;
+            nibble0 = (aluresult + adjust0) & 0xf;
+            nibble1 = ((aluresult + adjust1) >> 4) & 0xf;
+
+            self.p &= !(CARRY | ZERO | NEGATIVE | OVERFLOW);
+            if aluresult == 0 {
+                self.p |= ZERO;
+            } else {
+                self.p |= aluresult as u8 & NEGATIVE;
+            }
+            if decimalcarry == 1 {
+                self.p |= CARRY;
+            }
+            if ((self.acc ^ data) & (self.acc ^ aluresult)) & NEGATIVE as i32 != 0 {
+                self.p |= OVERFLOW;
+            }
+            self.acc = (nibble1 << 4) + nibble0;
+        } else {
+            let result = self.acc + (!data & self.byteMask) + (self.p as i32 & CARRY as i32);
+            self.p &= !(CARRY | ZERO | OVERFLOW | NEGATIVE);
+
+            if((self.acc ^ data) & (self.acc ^ result) & NEGATIVE as i32) != 0 {
+                self.p |= OVERFLOW;
+            }
+            let data = result & self.byteMask;
+            if data == 0 {
+                self.p |= ZERO;
+            }
+            if result > self.byteMask {
+                self.p |= CARRY;
+            }
+            self.p |= data as u8 & NEGATIVE;
+            self.acc = data;
+
+        }
+    }
 
 
 }
