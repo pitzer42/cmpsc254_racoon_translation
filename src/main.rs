@@ -235,7 +235,7 @@ impl Mpu6502 {
     }
 
     pub fn opSET(&mut self, x: i32){
-        self.p = self.p | !(x as u8);
+        self.p = self.p | (x as u8);
     }
     
     pub fn opSTA(&mut self, x: i32){
