@@ -19,7 +19,7 @@
 
 
 
-//expects int n > 0
+// expects int n > 0
 int recursiveFibo(int n) {
     if (n <= 1) {
         return n;
@@ -28,7 +28,7 @@ int recursiveFibo(int n) {
     }
 }
 //expects int n > 0
-int iterativeFibo(int n) {
+short int iterativeFibo(int n) {
     int first;
     int second;
     int next;
@@ -55,9 +55,22 @@ int iterativeFibo(int n) {
 
 // run once on startup
 void reset(void) {
-    int recur, iter;
-    recur = recursiveFibo(4);
-    iter = iterativeFibo(10);
+    // int recur, iter;
+    short int *p = (short int *)0x0200;
+    // Use malloc to allocate memory at the desired address
+    int i;
+    // recur = recursiveFibo(4);
+    // recur = 15000;
+    for (i = 0; i < 10; ++i) {
+        *(p + i) = iterativeFibo(i); 
+    }
+
+
+
+    __asm__("BRK");
+
+    // iter = iterativeFibo(10);
+    // __asm__("BRK");
 } 
 
 

@@ -20,14 +20,7 @@ irq=`   xxd -p -l 1 -seek 5 ${VECTORS}``xxd -p -l 1 -seek 4 ${VECTORS}`
 echo "nmi   : ${nmi}"
 echo "reset : ${reset}"
 echo "irq   : ${irq}"
-
-
+echo "reached"
 # Run py65mon
-py65mon --mpu 65C02 --load ${INPUT} --goto ${reset} <<EOF
-save ${DUMP_DIR}/zero.bin      0000 00ff
-save ${DUMP_DIR}/vram.bin      4000 4fff
-save ${DUMP_DIR}/ram.bin       0000 3fff
-save ${DUMP_DIR}/final.bin     0000 ffff
-cycles
-quit
-EOF
+echo ${INPUT} ${reset}
+py65mon --mpu 65C02 --load ${INPUT} --goto ${reset}
