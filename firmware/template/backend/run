@@ -24,7 +24,7 @@ echo "irq   : ${irq}"
 
 # Run py65mon
 
-python3 ~/Desktop/cs254/cmpsc254_racoon_translation/src/benchmark/py65/py65/monitor.py --mpu 65C02 --load ${INPUT} --goto ${reset} <<EOF
+~/Desktop/cs254/cmpsc254_racoon_translation/src/benchmark/py65/py65/monitor.py --mpu 65C02 --load ${INPUT} --goto ${reset} <<EOF
 save ${DUMP_DIR}/zero.bin      0000 00ff
 save ${DUMP_DIR}/vram.bin      4000 4fff
 save ${DUMP_DIR}/ram.bin       0000 3fff
