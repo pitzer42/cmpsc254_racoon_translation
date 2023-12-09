@@ -1,0 +1,100 @@
+Wrote +65536 bytes from $0000 to $ffff
+11105113
+
+Py65 Monitor UCSB IEEE Edition
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: c144 00 00 01 fb 00110111
+.
+Wrote +65536 bytes from $0000 to $ffff
+11000992
+
+Py65 Monitor UCSB IEEE Edition
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: c144 00 00 01 fb 00110111
+.
+Wrote +65536 bytes from $0000 to $ffff
+11362141
+
+Py65 Monitor UCSB IEEE Edition
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: c144 00 00 01 fb 00110111
+.
+Wrote +65536 bytes from $0000 to $ffff
+11152127
+
+Py65 Monitor UCSB IEEE Edition
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: c144 00 00 01 fb 00110111
+.
+Wrote +65536 bytes from $0000 to $ffff
+10947979
+
+Py65 Monitor UCSB IEEE Edition
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: c144 00 00 01 fb 00110111
+.
+Wrote +65536 bytes from $0000 to $ffff
+10713969
+
+Py65 Monitor UCSB IEEE Edition
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: c144 00 00 01 fb 00110111
+.
+Wrote +65536 bytes from $0000 to $ffff
+10857604
+
+Py65 Monitor UCSB IEEE Edition
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: c144 00 00 01 fb 00110111
+.
+Wrote +65536 bytes from $0000 to $ffff
+11023052
+
+Py65 Monitor UCSB IEEE Edition
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: c144 00 00 01 fb 00110111
+.
+Wrote +65536 bytes from $0000 to $ffff
+10933808
+
+Py65 Monitor UCSB IEEE Edition
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: c144 00 00 01 fb 00110111
+.
+Wrote +65536 bytes from $0000 to $ffff
+11019701
+
+Py65 Monitor UCSB IEEE Edition
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: c144 00 00 01 fb 00110111
+.
+Wrote +65536 bytes from $0000 to $ffff
+11000448
+
+Py65 Monitor UCSB IEEE Edition
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: c144 00 00 01 fb 00110111
+.
+Wrote +65536 bytes from $0000 to $ffff
+11016804
+
+Py65 Monitor UCSB IEEE Edition
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: c144 00 00 01 fb 00110111
+.
+
+
+
+Command: python3 -O ./py65/monitor.py --mpu 65C02 --load /home/j/school/254_py65/emulator-6502/benchmark1/dump/mapache64.bin --goto 5038 >> output.txt

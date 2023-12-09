@@ -4,6 +4,7 @@ use std::fs::File;
 use std::io::BufReader;
 use std::io::Read;
 use std::io::Write;
+use std::time::{Duration, Instant};
 
 // Constants that we use to manipulate the p (status) register https://en.wikibooks.org/wiki/6502_Assembly#Registers
 const NEGATIVE: u8 = 128;
@@ -26,7 +27,7 @@ const IRQ: u16 = 0xfffe;
 fn main() {
     let mut test = Mpu6502::new();
     // Reading a file byte by byte: https://users.rust-lang.org/t/reading-binary-files-a-trivial-program-not-so-trivial-for-me/56166/2
-    let my_buf = BufReader::new(File::open("./firmware/template/dump/mapache64.bin").unwrap());
+    let my_buf = BufReader::new(File::open("/home/j/school/254_py65/emulator-6502/benchmark1/dump/mapache64.bin").unwrap());
     let mut idx: usize = 0;
     for byte_or_error in my_buf.bytes() {
         let byte = byte_or_error.unwrap();
@@ -34,12 +35,15 @@ fn main() {
         idx += 1;
     }
 
+    // Timing: https://doc.rust-lang.org/std/time/struct.Instant.html
+    let now = Instant::now();
     loop {
         if test.memory[test.pc as usize] == (0xdb as u8) {
             break;
         }
         test.step();
     }
+    println!("Time (ns): {}", now.elapsed().as_nanos());
 
     let mut dump = File::create("./dump.bin").unwrap();
     for byte in test.memory {
@@ -112,10 +116,10 @@ impl Mpu6502 {
         self.pc = (self.pc + 1) & self.addrMask;
 
         let getResult = self.instructions.get(&instructCode);
-        println!("{:#04x}", instructCode);
+        // println!("{:#04x}", instructCode);
         if (getResult.is_none()) {
-            println!("PC: {}", self.pc);
-            println!("instructCode: {:#04x}", instructCode);
+            // println!("PC: {}", self.pc);
+            // println!("instructCode: {:#04x}", instructCode);
             self.pc = (self.pc + 1) & self.addrMask;
             return;
         }

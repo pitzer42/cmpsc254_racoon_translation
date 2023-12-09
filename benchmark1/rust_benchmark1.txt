@@ -1,0 +1,92 @@
+Time (ns): 146432
+49476
+219
+219
+HITime (ns): 151597
+49476
+219
+219
+HITime (ns): 595319
+49476
+219
+219
+HITime (ns): 606127
+49476
+219
+219
+HITime (ns): 128297
+49476
+219
+219
+HITime (ns): 577289
+49476
+219
+219
+HITime (ns): 99184
+49476
+219
+219
+HITime (ns): 99390
+49476
+219
+219
+HITime (ns): 576787
+49476
+219
+219
+HITime (ns): 632146
+49476
+219
+219
+HITime (ns): 640468
+49476
+219
+219
+HITime (ns): 587063
+49476
+219
+219
+HITime (ns): 146877
+49476
+219
+219
+HITime (ns): 590259
+49476
+219
+219
+HITime (ns): 577638
+49476
+219
+219
+HITime (ns): 583453
+49476
+219
+219
+HITime (ns): 142663
+49476
+219
+219
+HITime (ns): 593075
+49476
+219
+219
+HITime (ns): 189115
+49476
+219
+219
+HITime (ns): 129240
+49476
+219
+219
+HITime (ns): 655069
+49476
+219
+219
+HITime (ns): 100146
+49476
+219
+219
+HI
+
+Build command: cargo build --release
+Command: ../../target/release/emulator-6502 >> ../../benchmark1.txt
