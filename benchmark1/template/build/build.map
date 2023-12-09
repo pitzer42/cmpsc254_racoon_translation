@@ -1,0 +1,428 @@
+Modules list:
+-------------
+game_header.s.o:
+    ROM_GAME_HEADER   Offs=000000  Size=000029  Align=00001  Fill=0000
+main.c.o:
+    CODE              Offs=000000  Size=00014A  Align=00001  Fill=0000
+fw_headers.o:
+    FPGA_FW_HEADER    Offs=000000  Size=000037  Align=00001  Fill=0000
+    ROM_FW_HEADER     Offs=000000  Size=000037  Align=00001  Fill=0000
+mapache64_zero_page.o:
+    ZEROPAGE          Offs=000000  Size=000004  Align=00001  Fill=0000
+crt0.o:
+    STARTUP           Offs=000000  Size=000048  Align=00001  Fill=0000
+stop.o:
+    FIRMWARE_CODE     Offs=000000  Size=000001  Align=00001  Fill=0000
+reset.o:
+    CODE              Offs=00014A  Size=000012  Align=00001  Fill=0000
+vram.o:
+    PMF               Offs=000000  Size=000200  Align=00001  Fill=0000
+    PMB               Offs=000000  Size=000200  Align=00001  Fill=0000
+    NTBL              Offs=000000  Size=0003C1  Align=00001  Fill=0000
+    OBM               Offs=000000  Size=000100  Align=00001  Fill=0000
+    TXBL              Offs=000000  Size=0003C0  Align=00001  Fill=0000
+verify_firmware.o:
+    FIRMWARE_CODE     Offs=000001  Size=000029  Align=00001  Fill=0000
+Q9_6.o:
+    CODE              Offs=00015C  Size=0000F4  Align=00001  Fill=0000
+io.o:
+    IO                Offs=000000  Size=000004  Align=00001  Fill=0000
+vectors.o:
+    GAMEVECTORS       Offs=000000  Size=000006  Align=00001  Fill=0000
+    VECTORS           Offs=000000  Size=000006  Align=00001  Fill=0000
+backend/mapache64.lib(add.o):
+    CODE              Offs=000250  Size=000018  Align=00001  Fill=0000
+backend/mapache64.lib(addeqsp.o):
+    CODE              Offs=000268  Size=000011  Align=00001  Fill=0000
+backend/mapache64.lib(addysp.o):
+    CODE              Offs=000279  Size=00000E  Align=00001  Fill=0000
+backend/mapache64.lib(aslax2.o):
+    CODE              Offs=000287  Size=00000B  Align=00001  Fill=0000
+backend/mapache64.lib(aslax4.o):
+    CODE              Offs=000292  Size=000011  Align=00001  Fill=0000
+backend/mapache64.lib(asrax2.o):
+    CODE              Offs=0002A3  Size=00000F  Align=00001  Fill=0000
+backend/mapache64.lib(asrax4.o):
+    CODE              Offs=0002B2  Size=000019  Align=00001  Fill=0000
+backend/mapache64.lib(asreax2.o):
+    CODE              Offs=0002CB  Size=000019  Align=00001  Fill=0000
+backend/mapache64.lib(asreax4.o):
+    CODE              Offs=0002E4  Size=000015  Align=00001  Fill=0000
+backend/mapache64.lib(axlong.o):
+    CODE              Offs=0002F9  Size=00000D  Align=00001  Fill=0000
+backend/mapache64.lib(compl.o):
+    CODE              Offs=000306  Size=000009  Align=00001  Fill=0000
+backend/mapache64.lib(copydata.o):
+    CODE              Offs=00030F  Size=00002D  Align=00001  Fill=0000
+backend/mapache64.lib(decsp2.o):
+    CODE              Offs=00033C  Size=00000D  Align=00001  Fill=0000
+backend/mapache64.lib(decsp4.o):
+    CODE              Offs=000349  Size=00000D  Align=00001  Fill=0000
+backend/mapache64.lib(decsp8.o):
+    CODE              Offs=000356  Size=00000D  Align=00001  Fill=0000
+backend/mapache64.lib(div.o):
+    CODE              Offs=000363  Size=000015  Align=00001  Fill=0000
+backend/mapache64.lib(icmp.o):
+    CODE              Offs=000378  Size=00002E  Align=00001  Fill=0000
+backend/mapache64.lib(incsp2.o):
+    CODE              Offs=0003A6  Size=000015  Align=00001  Fill=0000
+backend/mapache64.lib(incsp3.o):
+    CODE              Offs=0003BB  Size=000005  Align=00001  Fill=0000
+backend/mapache64.lib(incsp4.o):
+    CODE              Offs=0003C0  Size=000005  Align=00001  Fill=0000
+backend/mapache64.lib(incsp6.o):
+    CODE              Offs=0003C5  Size=000005  Align=00001  Fill=0000
+backend/mapache64.lib(lmul.o):
+    CODE              Offs=0003CA  Size=000059  Align=00001  Fill=0000
+backend/mapache64.lib(lpush.o):
+    CODE              Offs=000423  Size=00001E  Align=00001  Fill=0000
+backend/mapache64.lib(negabs.o):
+    CODE              Offs=000441  Size=000012  Align=00001  Fill=0000
+backend/mapache64.lib(popptr1.o):
+    CODE              Offs=000453  Size=00000E  Align=00001  Fill=0000
+backend/mapache64.lib(pusha.o):
+    CODE              Offs=000461  Size=000016  Align=00001  Fill=0000
+backend/mapache64.lib(pushax.o):
+    CODE              Offs=000477  Size=00001A  Align=00001  Fill=0000
+backend/mapache64.lib(pushwsp.o):
+    CODE              Offs=000491  Size=00001C  Align=00001  Fill=0000
+backend/mapache64.lib(shelp.o):
+    CODE              Offs=0004AD  Size=000020  Align=00001  Fill=0000
+backend/mapache64.lib(staxsp.o):
+    CODE              Offs=0004CD  Size=00000B  Align=00001  Fill=0000
+backend/mapache64.lib(staxspi.o):
+    CODE              Offs=0004D8  Size=00001A  Align=00001  Fill=0000
+backend/mapache64.lib(udiv.o):
+    CODE              Offs=0004F2  Size=00004F  Align=00001  Fill=0000
+backend/mapache64.lib(zerobss.o):
+    CODE              Offs=000541  Size=000023  Align=00001  Fill=0000
+backend/mapache64.lib(zeropage.o):
+    ZEROPAGE          Offs=000004  Size=00001A  Align=00001  Fill=0000
+
+
+Segment list:
+-------------
+Name                   Start     End    Size  Align
+----------------------------------------------------
+ZEROPAGE              000000  00001D  00001E  00001
+PMF                   004000  0041FF  000200  00001
+PMB                   004200  0043FF  000200  00001
+NTBL                  004400  0047C0  0003C1  00001
+OBM                   004800  0048FF  000100  00001
+TXBL                  004900  004CBF  0003C0  00001
+FPGA_FW_HEADER        005000  005036  000037  00001
+STARTUP               005037  00507E  000048  00001
+FIRMWARE_CODE         00507F  0050A8  00002A  00001
+IO                    007000  007003  000004  00001
+ROM_FW_HEADER         008000  008036  000037  00001
+ROM_GAME_HEADER       008037  00805F  000029  00001
+CODE                  00C000  00C563  000564  00001
+GAMEVECTORS           00FFF4  00FFF9  000006  00001
+VECTORS               00FFFA  00FFFF  000006  00001
+
+
+Exports list by name:
+---------------------
+DO_LOGIC_VECTOR           00FFF6 RLA    FILL_VRAM_VECTOR          00FFF8 RLA    
+GAME_RESET_VECTOR         00FFF4 RLA    _CLR_VBLANK_IRQ           007001 RLA    
+_FPGA_FW_HEADER           005000 RLA    _FRAME                    000000 RLZ    
+_IN_VBLANK                007000 RLA    _ROM_FW_HEADER            008000 RLA    
+_TXBL                     004900 RLA    __BSS_RUN__               000200 RLA    
+__BSS_SIZE__              000000 REA    __DATA_LOAD__             008060 RLA    
+__DATA_RUN__              000200 RLA    __DATA_SIZE__             000000 REA    
+__RAM_SIZE__              003E00 REA    __RAM_START__             000200 RLA    
+_background_palette       0047C0 RLA    _do_logic                 00C148 RLA    
+_fill_vram                00C149 RLA    _game_reset               00C14A RLA    
+_handle_irq               005067 RLA    _handle_nmi               005037 RLA    
+_handle_reset             005038 RLA    _reset                    00C0ED RLA    
+addeq0sp                  00C268 RLA    addysp                    00C27A RLA    
+addysp1                   00C279 RLA    aslax2                    00C287 RLA    
+aslax4                    00C292 RLA    asrax2                    00C2A3 RLA    
+asrax4                    00C2B2 RLA    asreax2                   00C2CB RLA    
+asreax4                   00C2E4 RLA    axlong                    00C2F9 RLA    
+complax                   00C306 RLA    copydata                  00C30F RLA    
+decsp2                    00C33C RLA    decsp4                    00C349 RLA    
+decsp8                    00C356 RLA    incsp2                    00C3AD RLA    
+incsp3                    00C3BB RLA    incsp4                    00C3C0 RLA    
+incsp6                    00C3C5 RLA    negax                     00C445 RLA    
+popax                     00C3A6 RLA    popptr1                   00C453 RLA    
+popsargsudiv16            00C4AD RLA    ptr1                      00000C RLZ    
+ptr2                      00000E RLZ    ptr3                      000010 RLZ    
+ptr4                      000012 RLZ    pusha                     00C465 RLA    
+pushax                    00C47B RLA    pusheax                   00C42A RLA    
+pushw0sp                  00C491 RLA    pushwysp                  00C493 RLA    
+sp                        000004 RLZ    sreg                      000006 RLZ    
+stax0sp                   00C4CD RLA    staxspidx                 00C4D8 RLA    
+staxysp                   00C4CF RLA    tmp1                      000014 RLZ    
+tmp2                      000015 RLZ    tmp3                      000016 RLZ    
+tmp4                      000017 RLZ    tosaddax                  00C252 RLA    
+tosdivax                  00C365 RLA    tosicmp                   00C37A RLA    
+tosmuleax                 00C3CE RLA    udiv16                    00C503 RLA    
+verify_firmware           005080 RLA    zerobss                   00C541 RLA    
+
+
+
+Exports list by value:
+----------------------
+_FRAME                    000000 RLZ    __BSS_SIZE__              000000 REA    
+__DATA_SIZE__             000000 REA    sp                        000004 RLZ    
+sreg                      000006 RLZ    ptr1                      00000C RLZ    
+ptr2                      00000E RLZ    ptr3                      000010 RLZ    
+ptr4                      000012 RLZ    tmp1                      000014 RLZ    
+tmp2                      000015 RLZ    tmp3                      000016 RLZ    
+tmp4                      000017 RLZ    __BSS_RUN__               000200 RLA    
+__DATA_RUN__              000200 RLA    __RAM_START__             000200 RLA    
+__RAM_SIZE__              003E00 REA    _background_palette       0047C0 RLA    
+_TXBL                     004900 RLA    _FPGA_FW_HEADER           005000 RLA    
+_handle_nmi               005037 RLA    _handle_reset             005038 RLA    
+_handle_irq               005067 RLA    verify_firmware           005080 RLA    
+_IN_VBLANK                007000 RLA    _CLR_VBLANK_IRQ           007001 RLA    
+_ROM_FW_HEADER            008000 RLA    __DATA_LOAD__             008060 RLA    
+_reset                    00C0ED RLA    _do_logic                 00C148 RLA    
+_fill_vram                00C149 RLA    _game_reset               00C14A RLA    
+tosaddax                  00C252 RLA    addeq0sp                  00C268 RLA    
+addysp1                   00C279 RLA    addysp                    00C27A RLA    
+aslax2                    00C287 RLA    aslax4                    00C292 RLA    
+asrax2                    00C2A3 RLA    asrax4                    00C2B2 RLA    
+asreax2                   00C2CB RLA    asreax4                   00C2E4 RLA    
+axlong                    00C2F9 RLA    complax                   00C306 RLA    
+copydata                  00C30F RLA    decsp2                    00C33C RLA    
+decsp4                    00C349 RLA    decsp8                    00C356 RLA    
+tosdivax                  00C365 RLA    tosicmp                   00C37A RLA    
+popax                     00C3A6 RLA    incsp2                    00C3AD RLA    
+incsp3                    00C3BB RLA    incsp4                    00C3C0 RLA    
+incsp6                    00C3C5 RLA    tosmuleax                 00C3CE RLA    
+pusheax                   00C42A RLA    negax                     00C445 RLA    
+popptr1                   00C453 RLA    pusha                     00C465 RLA    
+pushax                    00C47B RLA    pushw0sp                  00C491 RLA    
+pushwysp                  00C493 RLA    popsargsudiv16            00C4AD RLA    
+stax0sp                   00C4CD RLA    staxysp                   00C4CF RLA    
+staxspidx                 00C4D8 RLA    udiv16                    00C503 RLA    
+zerobss                   00C541 RLA    GAME_RESET_VECTOR         00FFF4 RLA    
+DO_LOGIC_VECTOR           00FFF6 RLA    FILL_VRAM_VECTOR          00FFF8 RLA    
+
+
+
+Imports list:
+-------------
+DO_LOGIC_VECTOR (vectors.o):
+    crt0.o                    backend_src/crt0.s:36
+FILL_VRAM_VECTOR (vectors.o):
+    crt0.o                    backend_src/crt0.s:36
+GAME_RESET_VECTOR (vectors.o):
+    crt0.o                    backend_src/crt0.s:36
+_CLR_VBLANK_IRQ (io.o):
+    crt0.o                    backend_src/crt0.s:37
+_FPGA_FW_HEADER (fw_headers.o):
+    verify_firmware.o         backend_src/verify_firmware.s:4
+_FRAME (mapache64_zero_page.o):
+    crt0.o                    backend_src/crt0.s:43
+_IN_VBLANK (io.o):
+    crt0.o                    backend_src/crt0.s:37
+_ROM_FW_HEADER (fw_headers.o):
+    verify_firmware.o         backend_src/verify_firmware.s:4
+_TXBL (vram.o):
+    verify_firmware.o         backend_src/verify_firmware.s:4
+__BSS_RUN__ ([linker generated]):
+    zerobss.o                 common/zerobss.s:8
+__BSS_SIZE__ ([linker generated]):
+    zerobss.o                 common/zerobss.s:8
+__DATA_LOAD__ ([linker generated]):
+    copydata.o                common/copydata.s:8
+__DATA_RUN__ ([linker generated]):
+    copydata.o                common/copydata.s:8
+__DATA_SIZE__ ([linker generated]):
+    copydata.o                common/copydata.s:8
+__RAM_SIZE__ ([linker generated]):
+    reset.o                   backend_src/reset.s:5
+__RAM_START__ ([linker generated]):
+    reset.o                   backend_src/reset.s:5
+_background_palette (vram.o):
+    verify_firmware.o         backend_src/verify_firmware.s:4
+_do_logic (main.c.o):
+    vectors.o                 backend_src/vectors.s:8
+_fill_vram (main.c.o):
+    vectors.o                 backend_src/vectors.s:8
+_game_reset (reset.o):
+    vectors.o                 backend_src/vectors.s:8
+_handle_irq (crt0.o):
+    vectors.o                 backend_src/vectors.s:7
+_handle_nmi (crt0.o):
+    vectors.o                 backend_src/vectors.s:7
+_handle_reset (crt0.o):
+    vectors.o                 backend_src/vectors.s:7
+_reset (main.c.o):
+    reset.o                   backend_src/reset.s:8
+addeq0sp (addeqsp.o):
+    main.c.o                  build/main.c.s:260
+    main.c.o                  build/main.c.s:260
+addysp (addysp.o):
+    incsp6.o                  runtime/incsp6.s:8
+    incsp4.o                  runtime/incsp4.s:8
+    incsp3.o                  runtime/incsp3.s:8
+    main.c.o                  build/main.c.s:260
+addysp1 (addysp.o):
+    lmul.o                    runtime/lmul.s:9
+aslax2 (aslax2.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+aslax4 (aslax4.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+asrax2 (asrax2.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+asrax4 (asrax4.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+asreax2 (asreax2.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+asreax4 (asreax4.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+axlong (axlong.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+complax (compl.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+copydata (copydata.o):
+    reset.o                   backend_src/reset.s:6
+decsp2 (decsp2.o):
+    main.c.o                  build/main.c.s:260
+decsp4 (decsp4.o):
+    lpush.o                   runtime/lpush.s:12
+decsp8 (decsp8.o):
+    main.c.o                  build/main.c.s:260
+incsp2 (incsp2.o):
+    popptr1.o                 runtime/popptr1.s:8
+    staxspi.o                 runtime/staxspi.s:9
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    main.c.o                  build/main.c.s:260
+incsp3 (incsp3.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+incsp4 (incsp4.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    main.c.o                  build/main.c.s:260
+incsp6 (incsp6.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+negax (negabs.o):
+    shelp.o                   runtime/shelp.s:11
+    div.o                     runtime/div.s:11
+popax (incsp2.o):
+    shelp.o                   runtime/shelp.s:11
+popptr1 (popptr1.o):
+    udiv.o                    runtime/udiv.s:9
+popsargsudiv16 (shelp.o):
+    div.o                     runtime/div.s:11
+ptr1 (zeropage.o):
+    popptr1.o                 runtime/popptr1.s:9
+    zerobss.o                 common/zerobss.s:9
+    udiv.o                    runtime/udiv.s:10
+    staxspi.o                 runtime/staxspi.s:10
+    shelp.o                   runtime/shelp.s:12
+    lmul.o                    runtime/lmul.s:10
+    div.o                     runtime/div.s:12
+    copydata.o                common/copydata.s:9
+ptr2 (zeropage.o):
+    copydata.o                common/copydata.s:9
+ptr3 (zeropage.o):
+    lmul.o                    runtime/lmul.s:10
+ptr4 (zeropage.o):
+    udiv.o                    runtime/udiv.s:10
+    shelp.o                   runtime/shelp.s:12
+    lmul.o                    runtime/lmul.s:10
+pusha (pusha.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+pushax (pushax.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+    main.c.o                  build/main.c.s:260
+    main.c.o                  build/main.c.s:260
+    main.c.o                  build/main.c.s:260
+pusheax (lpush.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+pushw0sp (pushwsp.o):
+    main.c.o                  build/main.c.s:260
+pushwysp (pushwsp.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+    Q9_6.o                    build/s/Q9_6.s:239
+sp (zeropage.o):
+    popptr1.o                 runtime/popptr1.s:9
+    decsp4.o                  runtime/decsp4.s:8
+    staxspi.o                 runtime/staxspi.s:10
+    staxsp.o                  runtime/staxsp.s:8
+    pushwsp.o                 runtime/pushwsp.s:8
+    pushax.o                  runtime/pushax.s:8
+    pusha.o                   runtime/pusha.s:8
+    lpush.o                   runtime/lpush.s:13
+    lmul.o                    runtime/lmul.s:10
+    incsp2.o                  runtime/incsp2.s:8
+    icmp.o                    runtime/icmp.s:9
+    decsp8.o                  runtime/decsp8.s:8
+    decsp2.o                  runtime/decsp2.s:8
+    addysp.o                  runtime/addysp.s:8
+    addeqsp.o                 runtime/addeqsp.s:8
+    add.o                     runtime/add.s:12
+    Q9_6.o                    build/s/Q9_6.s:10
+    reset.o                   /usr/share/cc65/asminc/zeropage.inc:11
+    main.c.o                  build/main.c.s:10
+sreg (zeropage.o):
+    udiv.o                    runtime/udiv.s:10
+    lpush.o                   runtime/lpush.s:13
+    lmul.o                    runtime/lmul.s:10
+    icmp.o                    runtime/icmp.s:9
+    axlong.o                  runtime/axlong.s:9
+    asreax4.o                 runtime/asreax4.s:8
+    asreax2.o                 runtime/asreax2.s:8
+stax0sp (staxsp.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+staxspidx (staxspi.o):
+    main.c.o                  build/main.c.s:260
+staxysp (staxsp.o):
+    main.c.o                  build/main.c.s:260
+tmp1 (zeropage.o):
+    staxspi.o                 runtime/staxspi.s:10
+    shelp.o                   runtime/shelp.s:12
+    div.o                     runtime/div.s:12
+    copydata.o                common/copydata.s:9
+    asreax4.o                 runtime/asreax4.s:8
+    asreax2.o                 runtime/asreax2.s:8
+    asrax4.o                  runtime/asrax4.s:9
+    asrax2.o                  runtime/asrax2.s:8
+    aslax4.o                  runtime/aslax4.s:8
+    aslax2.o                  runtime/aslax2.s:8
+    main.c.o                  build/main.c.s:11
+tmp2 (zeropage.o):
+    shelp.o                   runtime/shelp.s:12
+    lmul.o                    runtime/lmul.s:10
+    div.o                     runtime/div.s:12
+tmp3 (zeropage.o):
+    lmul.o                    runtime/lmul.s:10
+tmp4 (zeropage.o):
+    lmul.o                    runtime/lmul.s:10
+tosaddax (add.o):
+    main.c.o                  build/main.c.s:260
+tosdivax (div.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+tosicmp (icmp.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+    main.c.o                  build/main.c.s:260
+tosmuleax (lmul.o):
+    Q9_6.o                    build/s/Q9_6.s:239
+udiv16 (udiv.o):
+    shelp.o                   runtime/shelp.s:11
+verify_firmware (verify_firmware.o):
+    crt0.o                    backend_src/crt0.s:39
+zerobss (zerobss.o):
+    reset.o                   backend_src/reset.s:6
+
