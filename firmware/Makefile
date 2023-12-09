@@ -25,7 +25,7 @@ FOR_TEMPLATE_FILES_IN = $(shell find for_template -type f)
 FOR_TEMPLATE_FILES_OUT = $(subst for_template/, template/, $(FOR_TEMPLATE_FILES_IN))
 
 # Path to cc65 installation directory (change as needed)
-CC65_INSTALL = /Users/richardhuang/Downloads/py65-main/cc65
+CC65_INSTALL = /usr/share/cc65
 
 # Path to ld65 template library
 SUPERVISION_LIB = ${CC65_INSTALL}/lib/supervision.lib

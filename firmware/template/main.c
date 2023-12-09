@@ -67,7 +67,7 @@ void reset(void) {
 
 
 
-    __asm__("BRK");
+    __asm__("STP");
 
     // iter = iterativeFibo(10);
     // __asm__("BRK");
