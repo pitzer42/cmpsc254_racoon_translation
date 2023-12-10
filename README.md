@@ -10,7 +10,7 @@ The folder benchmark1/ holds the entire template code for benchmark1, which is a
 
 ## main.rs
 
-Our code is very similar to the structure of the py65 emulator found here: https://github.com/ucsbieee/py65/tree/main/py65/devices. 
+Our code is very similar to the py65 emulator found here: https://github.com/ucsbieee/py65/tree/main/py65/devices. 
 
 The main function should load a mapache64.bin (located in firmware/template/dump/) file created by the make commands in the firmware/template/ folder. There is a copy of this bin file in benchmark1/template/dump/mapache64.bin.
 
