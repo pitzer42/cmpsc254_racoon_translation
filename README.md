@@ -30,5 +30,5 @@ This is a utility script for converting the python decorators found in these fil
 
 ## monitor.py
 
-This file is included for the purpose of showing what changes we made to the original monitor.py from  for the purpose of benchmarking. Ctrl+F the file for "rs65" and you will see our changes. The change to the constructor arguments is for the purpose of using a basic array for memory access instead of checking for observers on each access. This is the original: https://github.com/ucsbieee/py65/blob/main/py65/monitor.py
+This file is included for the purpose of showing what changes we made to the original monitor.py for benchmarking. Ctrl+F the file for "rs65" and you will see our changes. The change to the constructor arguments is for the purpose of using a basic array for memory access instead of checking for observers on each access. This is the original: https://github.com/ucsbieee/py65/blob/main/py65/monitor.py
 
