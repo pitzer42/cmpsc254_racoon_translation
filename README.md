@@ -3,8 +3,9 @@
 ## firmware folder 
 The firmware folder was copied from here: https://github.com/ucsbieee/mapache64/tree/main/firmware#creating-a-game 
 
-This gives us the framework to write the fibonacci code in the template folder which we use to benchmark py65 and our rust implementation.
+This gives us the framework to write the fibonacci code in the template folder (created using make template in the mapache64 firmware folder) which we use to benchmark py65 and our rust implementation.
 
+## benchmark1 folder
 The folder benchmark1/ holds the entire template code for benchmark1, which is a straight copy of the firmware/template/ folder because we only did one benchmark. It also holds the output of our trials in python_benchmark1.txt and rust_benchmark1.txt. There is also a description of the commands we used for our benchmarks.
 
 ## main.rs
